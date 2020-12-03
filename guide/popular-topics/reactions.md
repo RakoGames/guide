@@ -363,6 +363,28 @@ client.on('messageReactionAdd', async (reaction, user) => {
 Partial structures are enabled globally. You can not only make them work for a certain event or cache and you very likely need to adapt other parts of your code that are accessing data from the relevant caches. All caches holding the respective structure type might return partials as well!
 :::
 
+## Sending a message then reactiong to it
+
+If you ever wanted to make a poll command you'll sure need an upvote reaction and a downvote reaction
+Here's how you do it:
+
+```js
+client.on('message', message => {
+	if (message.content === '!poll') {
+                var PollMessage;
+                //makes a variable to store the poll message
+		message.channel.send('Test poll!')
+			.then(sentMessage => PollMessage = sentMessage)
+                        .then(() => PollMessage.react('✅'))
+			.then(() => PollMessage.react('❎'))
+                //adds reactions to the poll
+                        .then(() => message.delete())
+                //removes the command for polishing (optional)
+			.catch(() => console.error('One of the emojis failed to react.'));
+	}
+});
+```
+
 </branch>
 
 ## Resulting code
